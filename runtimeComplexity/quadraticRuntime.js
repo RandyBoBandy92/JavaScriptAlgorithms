@@ -15,8 +15,6 @@ const fruit = [
   "🍇",
 ];
 
-console.time("matcher");
-
 const matcher = (array) => {
   for (let i = 0; i < array.length; i++) {
     for (let j = 0; j < array.length; j++) {
@@ -29,6 +27,6 @@ const matcher = (array) => {
   return "No matches found 😞";
 };
 
-console.timeEnd("matcher"); // 0.006ms
-
+console.time("matcher");
 console.log(matcher(fruit));
+console.timeEnd("matcher"); // 0.154ms
