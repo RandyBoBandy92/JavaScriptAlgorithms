@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move Zeroes Workshop</title>
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            width: 600px;
+            margin: 0 auto;
+            font-size: 2rem;
+            gap: 10px;
+        }
+
+        .p1 {
+            grid-column: 1;
+            grid-row: 1;
+            justify-self: flex-start;
+            width: max-content;
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            place-items: center;
+        }
+
+        .p2 {
+            grid-column: 1;
+            grid-row: 1;
+            justify-self: flex-end;
+            width: max-content;
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            place-items: center;
+        }
+
+        .array {
+            grid-row: 2;
+            grid-column: 1/7;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+            place-items: center;
+            gap: 10px;
+        }
+
+        .array span {
+            border: 3px solid black;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+
+        button.step {
+            grid-row: 3;
+            grid-column: 3 /5;
+            width: 100px;
+            justify-self: center;
+        }
+
+        .messages {
+            display: flex;
+            flex-direction: column-reverse;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="p1">P1 <span class="index">0</span> ⬇</div>
+        <div class="p2">P2 <span class="index">0</span> ⬇</div>
+        <div class="array">
+            <span class="array-item 0">0</span>
+            <span class="array-item 1">1</span>
+            <span class="array-item 2">2</span>
+            <span class="array-item 0">0</span>
+            <span class="array-item 3">3</span>
+            <span class="array-item 1">1</span>
+        </div>
+        <button class="step">step</button>
+    </div>
+    <ul class="messages"></ul>
+    <script>
+        const startingIndex = 1
+        const finishingIndex = 7
+        const p1 = document.querySelector(".p1")
+        p1.style.gridColumn = 1
+        const p1IndexElem = p1.querySelector(".index")
+        const p2 = document.querySelector(".p2")
+        const p2IndexElem = p2.querySelector(".index")
+        p2.style.gridColumn = 1
+        const button = document.querySelector(".step")
+        const arrayItems = document.querySelectorAll('.array-item')
+        console.log(arrayItems)
+        button.addEventListener('click', handleStep)
+        const messageBoard = document.querySelector('.messages')
+        let messageNum = 1
+        let firstLoopDone = false
+        let secondLoopDone = false
+        let finished = false
+
+        function writeMessage(message) {
+            const messageElem = document.createElement("li")
+            messageElem.innerHTML = `${messageNum}: ${message}`
+            messageBoard.append(messageElem)
+            messageNum++
+        }
+
+        function handleStep() {
+            if (!firstLoopDone) {
+                const p1Index = Number(p1.style.gridColumn) - 1
+                const p2Index = Number(p2.style.gridColumn) - 1
+                if (arrayItems[p1Index].innerHTML !== "0") {
+                    arrayItems[p2Index].innerHTML = arrayItems[p1Index].innerHTML
+                    p2.style.gridColumn = Number(p2.style.gridColumn) + 1
+                    p2IndexElem.innerHTML = Number(p2IndexElem.innerHTML) + 1
+                    writeMessage(`p1 array index ${p1Index} is not zero. shifting to p2 array index ${p2Index}.`)
+                }
+                if (Number(p1.style.gridColumn) + 1 === 7) {
+                    firstLoopDone = true
+                    p1IndexElem.style.color = "red"
+                    writeMessage("p1 loop finished")
+                } else {
+                    p1.style.gridColumn = Number(p1.style.gridColumn) + 1
+                    p1IndexElem.innerHTML = Number(p1IndexElem.innerHTML) + 1
+                    writeMessage(`shifting p1 from ${p1Index} to ${p1Index + 1}`)
+                }
+            } else if (firstLoopDone && !secondLoopDone) {
+                const p2Index = Number(p2.style.gridColumn) - 1
+                arrayItems[p2Index].innerHTML = 0
+                if (Number(p2.style.gridColumn) + 1 === 7) {
+                    secondLoopDone = true
+                    p2IndexElem.style.color = "red"
+                    writeMessage("p2 loop finished")
+                } else {
+                    p2.style.gridColumn = Number(p2.style.gridColumn) + 1
+                    p2IndexElem.innerHTML = Number(p2IndexElem.innerHTML) + 1
+                    writeMessage(`Setting p2 array index ${p2Index} to 0. Moving p2 array index to ${p2Index + 1}`)
+                }
+            }
+            if (firstLoopDone && secondLoopDone && !finished) {
+                finished = true
+                const done = document.createElement("h2")
+                done.innerHTML = "Done!"
+                document.querySelector('.container').append(done)
+            }
+        }
+    </script>
+</body>
+
+</html>
